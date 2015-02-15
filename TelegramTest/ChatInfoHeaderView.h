@@ -34,7 +34,10 @@
 @property (nonatomic, strong,readonly) UserInfoShortButtonView *addMembersButton;
 
 @property (nonatomic, strong,readonly) UserInfoShortButtonView *notificationView;
+@property (nonatomic, strong,readonly) UserInfoShortButtonView *stickToTopView;
+
 @property (nonatomic, strong,readonly) ITSwitch *notificationSwitcher;
+@property (nonatomic, strong,readonly) ITSwitch *stickToTopSwitcher;
 @property (nonatomic, strong,readonly) LineView *nameLiveView;
 
 

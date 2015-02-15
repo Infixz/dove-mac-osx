@@ -168,6 +168,7 @@
            
         }];
         
+        
         _notificationSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
         
         _notificationView.rightContainer = self.notificationSwitcher;
@@ -188,7 +189,33 @@
 
         [self addSubview:self.notificationView];
         
-        self.filesMediaButton.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor = DARK_BLACK;
+        
+        
+        _stickToTopView  = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"StickToTop", nil) tapBlock:^{
+            
+        }];
+        
+
+        _stickToTopSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
+        _stickToTopView.rightContainer = self.stickToTopSwitcher;
+        [self.stickToTopSwitcher setDidChangeHandler:^(BOOL isOn) {
+            
+            TL_conversation *dialog = [[DialogsManager sharedManager] findByChatId:strongSelf.controller.chat.n_id];
+            
+//            BOOL isMute =  dialog.isMute;
+//            if(isMute == isOn) {
+//                [dialog muteOrUnmute:nil];
+//            }
+            
+        }];
+
+        [_stickToTopView setFrame:NSMakeRect(100,  NSMinY(self.notificationView.frame) - 42, NSWidth(self.frame) - 200, 42)];
+        [self addSubview:self.stickToTopView];
+
+        
+        
+        
+        self.filesMediaButton.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor =         self.stickToTopView.textButton.textColor=DARK_BLACK;
         
         
 
