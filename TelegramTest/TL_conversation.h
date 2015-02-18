@@ -36,6 +36,7 @@ typedef enum {
 - (TL_broadcast *)broadcast;
 
 - (BOOL)isMute;
+- (int)stickTopOrder;
 - (void)muteOrUnmute:(dispatch_block_t)completeHandler;
 - (void)unmute:(dispatch_block_t)completeHandler;
 - (void)mute:(dispatch_block_t)completeHandler;

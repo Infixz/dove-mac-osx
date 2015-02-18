@@ -200,19 +200,31 @@
         _stickToTopView.rightContainer = self.stickToTopSwitcher;
         [self.stickToTopSwitcher setDidChangeHandler:^(BOOL isOn) {
             
-            TL_conversation *dialog = [[DialogsManager sharedManager] findByChatId:strongSelf.controller.chat.n_id];
+            int chat_id = strongSelf.controller.chat.n_id;
+        
             
-//            BOOL isMute =  dialog.isMute;
-//            if(isMute == isOn) {
-//                [dialog muteOrUnmute:nil];
-//            }
+            NSMutableArray *stickTopChat;
             
+            stickTopChat=[[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"stickTopChat"]];
+
+            if(isOn==YES)
+                [stickTopChat addObject:@(chat_id)];
+            else {
+                for (long i=stickTopChat.count-1; i>-1; i--) {
+                    NSNumber *saved_chat_id = [stickTopChat objectAtIndex:i];
+                    if(saved_chat_id.intValue==chat_id){
+                        [stickTopChat removeObject:saved_chat_id];
+                        break;
+                    }
+                }
+            }
+
+            [[NSUserDefaults standardUserDefaults]setObject:stickTopChat forKey: @"stickTopChat"];
+            [Notification perform:DIALOGS_NEED_FULL_RESORT data:@{KEY_DIALOGS:@[]}];
         }];
 
         [_stickToTopView setFrame:NSMakeRect(100,  NSMinY(self.notificationView.frame) - 42, NSWidth(self.frame) - 200, 42)];
         [self addSubview:self.stickToTopView];
-
-        
         
         
         self.filesMediaButton.textButton.textColor = self.sharedMediaButton.textButton.textColor = self.notificationView.textButton.textColor =         self.stickToTopView.textButton.textColor=DARK_BLACK;
@@ -325,6 +337,23 @@
     BOOL isMute = chat.dialog.isMute;
     
     [self.notificationSwitcher setOn:!isMute animated:NO];
+    
+    
+    BOOL isStickTop = NO;
+    NSArray *stickTopChat = [[NSUserDefaults standardUserDefaults] objectForKey:@"stickTopChat"];
+    if(stickTopChat){
+        for (long i = stickTopChat.count-1; i>-1; i--) {
+            NSNumber *saved_chat_id = [stickTopChat objectAtIndex:i];
+            if(saved_chat_id.intValue == chat.n_id){
+                isStickTop=YES;
+                break;
+            }
+        }
+    }
+    
+    [self.stickToTopSwitcher setOn:isStickTop animated:NO];
+    
+    
     [self TMNameTextFieldDidChanged:self.nameTextField];
 }
 

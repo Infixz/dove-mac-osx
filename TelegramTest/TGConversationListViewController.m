@@ -34,6 +34,7 @@
 @property (nonatomic, strong) DialogsHistoryController *historyController;
 @property (nonatomic, strong) DialogTableView *tableView;
 @property (nonatomic, strong) TL_conversation *selectedConversation;
+@property (nonatomic, strong) NSDictionary *stickTopChatdict;
 @end
 
 @implementation TGConversationListViewController
@@ -74,6 +75,14 @@
     [Notification addObserver:self selector:@selector(notificationDialogSelectionChanged:) name:@"ChangeDialogSelection"];
     [self addScrollEvent];
     
+
+    NSArray *stickTopChat = [[NSUserDefaults standardUserDefaults] objectForKey:@"stickTopChat"];
+    NSMutableDictionary *mutableDictionary = [[NSMutableDictionary alloc] init];
+    for (NSNumber *chat_id in stickTopChat){
+        [mutableDictionary setObject:@(1) forKey:chat_id];
+    }
+    _stickTopChatdict=mutableDictionary;
+    
     [[Storage manager] users:^(NSArray *result) {
         
         [[UsersManager sharedManager] addFromDB:result];
@@ -95,7 +104,7 @@
         [[MessagesManager sharedManager] setUnread_count:count];
     }];
     
-    
+    [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:@"stickTopChat" options:NSKeyValueObservingOptionNew context:NULL];
     
 }
 
@@ -166,6 +175,20 @@
     static int limit = 30;
     [self loadhistory:limit];
 }
+-(void)observeValueForKeyPath:(NSString *)aKeyPath ofObject:(id)anObject
+                       change:(NSDictionary *)aChange context:(void *)aContext
+{
+
+    if([aKeyPath isEqualToString:@"stickTopChat"]){
+        NSArray *stickTopChat = [[NSUserDefaults standardUserDefaults] objectForKey:@"stickTopChat"];
+        NSMutableDictionary *mutableDictionary = [[NSMutableDictionary alloc] init];
+        for (NSNumber *chat_id in stickTopChat){
+            [mutableDictionary setObject:@(1) forKey:chat_id];
+        }
+        _stickTopChatdict=mutableDictionary;
+    }
+    
+}
 
 -(void)loadhistory:(int)limit  {
     
@@ -194,12 +217,27 @@
 
 -(void)insertAll:(NSArray *)all {
     NSMutableArray *dialogs = [[NSMutableArray alloc] init];
+    BOOL haveStickTop=NO;
     for(TL_conversation *dialog in all) {
+
         if(!dialog.isAddToList)
             continue;
-        
+
         ConversationTableItem *item = [[ConversationTableItem alloc] initWithConversationItem:dialog];
+        if([_stickTopChatdict count]>0){
+            NSNumber *key=[NSNumber numberWithInt:dialog.chat.n_id];
+            if([_stickTopChatdict objectForKey:key]){
+                [self.tableView insert:item atIndex:0 tableRedraw:YES];
+//                [dialogs insertObject:item atIndex:0];
+                haveStickTop=YES;
+            }else{
+                [dialogs addObject:item];
+            }
+        }else{
         [dialogs addObject:item];
+        }
+
+
     }
     
     NSTableViewAnimationOptions animation = self.tableView.defaultAnimation;
@@ -222,6 +260,7 @@
 }
 - (void)dealloc {
     [Notification removeObserver:self];
+    [[NSUserDefaults standardUserDefaults] removeObserver:self forKeyPath:@"stickTopChat"];
     [self removeScrollEvent];
 }
 
@@ -269,8 +308,15 @@
         for(TL_conversation *dialog in current) {
             if(!dialog.isAddToList)
                 continue;
-            
+
             ConversationTableItem *item = [[ConversationTableItem alloc] initWithConversationItem:dialog];
+            NSNumber *key=[NSNumber numberWithInt:dialog.chat.n_id];
+            
+            if([_stickTopChatdict objectForKey:key]){
+                [dialogs insertObject:item atIndex:0];
+            }else{
+                [dialogs addObject:item];
+            }
             
             [dialogs addObject:item];
         }
