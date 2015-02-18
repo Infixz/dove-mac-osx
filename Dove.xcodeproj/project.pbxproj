@@ -1900,7 +1900,7 @@
 		CEAE5D69181ED1BF00C17645 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		CEAE5D6B181EEFF000C17645 /* TLPeer+Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TLPeer+Extensions.h"; sourceTree = "<group>"; };
 		CEAE5D6C181EEFF000C17645 /* TLPeer+Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TLPeer+Extensions.m"; sourceTree = "<group>"; };
-		CEB09E5817DAFC250055F150 /* Telegram.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Telegram.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CEB09E5817DAFC250055F150 /* Dove.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dove.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEB09E5B17DAFC250055F150 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		CEB09E5E17DAFC250055F150 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		CEB09E5F17DAFC250055F150 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -4074,7 +4074,7 @@
 		CEB09E5917DAFC250055F150 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CEB09E5817DAFC250055F150 /* Telegram.app */,
+				CEB09E5817DAFC250055F150 /* Dove.app */,
 				C235369819CB1A100044978E /* TGKeeper */,
 			);
 			name = Products;
@@ -4685,9 +4685,9 @@
 			productReference = C235369819CB1A100044978E /* TGKeeper */;
 			productType = "com.apple.product-type.tool";
 		};
-		CEB09E5717DAFC250055F150 /* Telegram */ = {
+		CEB09E5717DAFC250055F150 /* Dove */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CEB09E7817DAFC250055F150 /* Build configuration list for PBXNativeTarget "Telegram" */;
+			buildConfigurationList = CEB09E7817DAFC250055F150 /* Build configuration list for PBXNativeTarget "Dove" */;
 			buildPhases = (
 				CEB09E5417DAFC250055F150 /* Sources */,
 				CEB09E5517DAFC250055F150 /* Frameworks */,
@@ -4699,9 +4699,9 @@
 			);
 			dependencies = (
 			);
-			name = Telegram;
+			name = Dove;
 			productName = TelegramTest;
-			productReference = CEB09E5817DAFC250055F150 /* Telegram.app */;
+			productReference = CEB09E5817DAFC250055F150 /* Dove.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -4735,7 +4735,7 @@
 					};
 				};
 			};
-			buildConfigurationList = CEB09E5317DAFC240055F150 /* Build configuration list for PBXProject "Telegram" */;
+			buildConfigurationList = CEB09E5317DAFC240055F150 /* Build configuration list for PBXProject "Dove" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -4764,7 +4764,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				CEB09E5717DAFC250055F150 /* Telegram */,
+				CEB09E5717DAFC250055F150 /* Dove */,
 				C235369719CB1A100044978E /* TGKeeper */,
 			);
 		};
@@ -5613,7 +5613,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				"OTHER_LDFLAGS[arch=*]" = "";
-				PRODUCT_NAME = Telegram;
+				PRODUCT_NAME = Dove;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include";
@@ -5649,7 +5649,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				"OTHER_CODE_SIGN_FLAGS[sdk=*]" = "--deep";
 				"OTHER_LDFLAGS[arch=*]" = "";
-				PRODUCT_NAME = Telegram;
+				PRODUCT_NAME = Dove;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/libwebp-0.4.2-mac-10.8/include";
@@ -5670,7 +5670,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CEB09E5317DAFC240055F150 /* Build configuration list for PBXProject "Telegram" */ = {
+		CEB09E5317DAFC240055F150 /* Build configuration list for PBXProject "Dove" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CEB09E7617DAFC250055F150 /* Debug */,
@@ -5679,7 +5679,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CEB09E7817DAFC250055F150 /* Build configuration list for PBXNativeTarget "Telegram" */ = {
+		CEB09E7817DAFC250055F150 /* Build configuration list for PBXNativeTarget "Dove" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CEB09E7917DAFC250055F150 /* Debug */,
