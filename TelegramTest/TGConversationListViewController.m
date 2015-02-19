@@ -349,27 +349,28 @@
     
     
     ConversationTableItem *object = (ConversationTableItem *) [self.tableView itemByHash:[ConversationTableItem hash:conversation]];
-
-    ConversationTableItem *current_item=(ConversationTableItem*)[self.tableView itemAtPosition:position];
-    
-    while (current_item.isStickTop==YES && position < self.tableView.count) {
-        position += 1;
-        current_item=(ConversationTableItem*)[self.tableView itemAtPosition:position];
+    if(object.isStickTop==NO){
+        ConversationTableItem *current_item=(ConversationTableItem*)[self.tableView itemAtPosition:position];
+        
+        while (current_item.isStickTop==YES && position < self.tableView.count) {
+            position += 1;
+            current_item=(ConversationTableItem*)[self.tableView itemAtPosition:position];
+        }
+        
+        if(position != 0 && position >= self.tableView.count)
+            position = (int) self.tableView.count-1;
+        
+        if(object) {
+            [self.tableView moveItemFrom:[self.tableView positionOfItem:object] to:position tableRedraw:YES];
+        } else {
+            object = [[ConversationTableItem alloc] initWithConversationItem:conversation];
+            [self.tableView insert:object atIndex:position tableRedraw:YES];
+            if(conversation == [Telegram rightViewController].messagesViewController.conversation)
+                [self.tableView setSelectedByHash:object.hash];
+        }
+        
     }
-    
-    if(position != 0 && position >= self.tableView.count)
-        position = (int) self.tableView.count-1;
 
-
-    
-    if(object) {
-        [self.tableView moveItemFrom:[self.tableView positionOfItem:object] to:position tableRedraw:YES];
-    } else {
-        object = [[ConversationTableItem alloc] initWithConversationItem:conversation];
-        [self.tableView insert:object atIndex:position tableRedraw:YES];
-        if(conversation == [Telegram rightViewController].messagesViewController.conversation)
-            [self.tableView setSelectedByHash:object.hash];
-    }
     
 }
 
