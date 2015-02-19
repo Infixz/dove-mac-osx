@@ -21,7 +21,7 @@
 @property (nonatomic) BOOL isRead;
 @property (nonatomic) BOOL isOut;
 @property (nonatomic) BOOL isMuted;
-
+@property (nonatomic) BOOL isStickTop;
 
 @property (nonatomic, strong) NSMutableAttributedString *date;
 @property (nonatomic) NSSize dateSize;

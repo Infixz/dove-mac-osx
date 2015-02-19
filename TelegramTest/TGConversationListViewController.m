@@ -224,9 +224,11 @@
             continue;
 
         ConversationTableItem *item = [[ConversationTableItem alloc] initWithConversationItem:dialog];
+        
         if([_stickTopChatdict count]>0){
             NSNumber *key=[NSNumber numberWithInt:dialog.chat.n_id];
             if([_stickTopChatdict objectForKey:key]){
+                item.isStickTop = YES;
                 [self.tableView insert:item atIndex:0 tableRedraw:YES];
 //                [dialogs insertObject:item atIndex:0];
                 haveStickTop=YES;
@@ -313,6 +315,7 @@
             NSNumber *key=[NSNumber numberWithInt:dialog.chat.n_id];
             
             if([_stickTopChatdict objectForKey:key]){
+                item.isStickTop = YES;
                 [dialogs insertObject:item atIndex:0];
             }else{
                 [dialogs addObject:item];
@@ -344,10 +347,21 @@
         [self.tableView scrollToBeginningOfDocument:self];
     } 
     
-    if(position != 0 && position >= self.tableView.count)
-        position = (int) self.tableView.count-1;
     
     ConversationTableItem *object = (ConversationTableItem *) [self.tableView itemByHash:[ConversationTableItem hash:conversation]];
+
+    ConversationTableItem *current_item=(ConversationTableItem*)[self.tableView itemAtPosition:position];
+    
+    while (current_item.isStickTop==YES && position < self.tableView.count) {
+        position += 1;
+        current_item=(ConversationTableItem*)[self.tableView itemAtPosition:position];
+    }
+    
+    if(position != 0 && position >= self.tableView.count)
+        position = (int) self.tableView.count-1;
+
+
+    
     if(object) {
         [self.tableView moveItemFrom:[self.tableView positionOfItem:object] to:position tableRedraw:YES];
     } else {
