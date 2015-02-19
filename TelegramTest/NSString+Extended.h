@@ -16,4 +16,5 @@
 - (NSSize)sizeForTextFieldForWidth:(int)width;
 - (NSArray *)getEmojiFromString;
 -(NSString *)replaceSmilesToEmoji;
+- (BOOL)containsCJKCharacters;
 @end

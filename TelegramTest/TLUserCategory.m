@@ -116,7 +116,13 @@ DYNAMIC_PROPERTY(SEEN_UPDATE);
     
     
     //Fullname
-    NSString *fullName = [[[[NSString stringWithFormat:@"%@ %@", self.first_name, self.last_name] trim] singleLine] htmlentities];
+    NSString *fullName;
+    if ([self.last_name containsCJKCharacters] || [self.first_name containsCJKCharacters]) {
+        fullName = [[[[NSString stringWithFormat:@"%@%@", self.last_name, self.first_name] trim] singleLine] htmlentities];
+    }
+    else{
+        fullName = [[[[NSString stringWithFormat:@"%@ %@", self.first_name, self.last_name] trim] singleLine] htmlentities];
+    }
     NSString *fullNameFull = fullName;
     if(fullName.length > 30)
         fullName = [fullName substringToIndex:30];

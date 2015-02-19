@@ -1056,5 +1056,12 @@ static NSTextField *testTextField() {
     // get the raw text out of the parsee after parsing, and return it
     return strippedString;
 }
+
+- (BOOL)containsCJKCharacters{
+    NSError *error;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\p{Han}" options:0 error:&error];
+    return [regex numberOfMatchesInString:self options:0 range:NSMakeRange(0, self.length)] > 0;
+}
+
 @end
 
