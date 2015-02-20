@@ -288,7 +288,7 @@ void exceptionHandler(NSException * exception)
     
     [SecretChatAccepter instance];
     
-    [self initializeUpdater];
+    //[self initializeUpdater];
     [self initializeKeyDownHandler];
     
     if ([NSUserNotification class] && [NSUserNotificationCenter class]) {
