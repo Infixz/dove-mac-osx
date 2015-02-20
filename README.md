@@ -1,9 +1,9 @@
-Telegram for OSX
+Dove for OSX
 ===========
 
-[Telegram](http://telegram.org) is a messaging app with a focus on speed and security. It’s superfast, simple and free.
+[Telegram](http://telegram.org) is a messaging app with a focus on speed and security. It’s superfast, simple and free. Dove is a third party Telegram client.
 
-This repo contains official [Telegram Messenger](https://telegram.org/dl/osx) source code.
+This repo fork from official [Telegram Messenger](https://github.com/overtake/telegram) source code.
 
 ### API, Protocol documentation
 
