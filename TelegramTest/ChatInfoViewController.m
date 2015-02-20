@@ -134,7 +134,7 @@
 
     
     
-    _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 390)];
+    _headerView = [[ChatInfoHeaderView alloc] initWithFrame:NSMakeRect(0, 0, self.view.bounds.size.width, 400)];
     
 
     _tableView = [[TMTableView alloc] initWithFrame:self.view.bounds];
