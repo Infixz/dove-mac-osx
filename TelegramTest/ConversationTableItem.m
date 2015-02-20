@@ -68,6 +68,7 @@
     self.writeAttributedString = [[NSMutableAttributedString alloc] init];
     [self.writeAttributedString setSelectionColor:NSColorFromRGB(0xffffff) forColor:NSColorFromRGB(0x808080)];
     [self notificationChangeMessage:nil];
+
     return self;
 }
 
@@ -255,4 +256,6 @@
     NSString *hashStr = [Notification notificationNameByDialog:object action:@"hash"];
     return [hashStr hash];
 }
+
+
 @end

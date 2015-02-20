@@ -392,6 +392,7 @@
     ConversationTableItemView *view = (ConversationTableItemView *)[self.tableView cacheViewForClass:[ConversationTableItemView class] identifier:@"dialogItem" withSize:NSMakeSize(200, DIALOG_CELL_HEIGHT)];
     
     view.tableView = self.tableView;
+
     return view;
 
 

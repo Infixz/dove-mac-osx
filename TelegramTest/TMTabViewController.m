@@ -179,7 +179,7 @@
         [view addSubview:container];
         
         
-        if(idx == 1) {
+        if(idx == 0) {
             
             
             if(!self.chatTabView) {

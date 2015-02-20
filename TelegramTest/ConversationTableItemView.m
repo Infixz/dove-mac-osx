@@ -151,7 +151,11 @@ static NSDictionary *attributes() {
             
             NSColor *color = nil;
             if(!weakSelf.isSelected) {
-                color = [NSColor whiteColor];
+                ConversationTableItem *item=[weakSelf rowItem];
+                if(item.isStickTop == YES)
+                    color = NSColorFromRGB(0xF4F4F4);
+                else
+                    color = [NSColor whiteColor];
                 [color set];
                 NSRectFill(NSMakeRect(0, 0, weakSelf.bounds.size.width - DIALOG_BORDER_WIDTH, weakSelf.bounds.size.height));
                 
@@ -285,7 +289,6 @@ static NSDictionary *attributes() {
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-   
 }
 
 - (void)setFrameSize:(NSSize)newSize {
@@ -342,6 +345,7 @@ static int unreadOffsetRight = 13;
     int offsetX = (sizeWidth - [self rowItem].unreadTextSize.width)/2;
     [[self rowItem].unreadTextCount drawAtPoint:CGPointMake(offset1 - unreadCountRadius + offsetX, offsetY + 3) withAttributes:@{NSForegroundColorAttributeName: self.isSelected ? NSColorFromRGB(0x6896ba)  : [NSColor whiteColor], NSFontAttributeName: [NSFont fontWithName:@"HelveticaNeue-Bold" size:11]}];
 }
+
 
 - (void) checkSelected:(BOOL)isSelected {
     
@@ -407,6 +411,10 @@ static int unreadOffsetRight = 13;
     
     [self.titleTextField setSelectText:item.selectString];
     
+
+    [[NSColor redColor] set];
+    NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
+
     
     [self setNeedsDisplay:YES];
     

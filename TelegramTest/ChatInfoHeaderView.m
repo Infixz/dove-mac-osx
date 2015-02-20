@@ -189,12 +189,9 @@
 
         [self addSubview:self.notificationView];
         
-        
-        
         _stickToTopView  = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"StickToTop", nil) tapBlock:^{
             
         }];
-        
 
         _stickToTopSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
         _stickToTopView.rightContainer = self.stickToTopSwitcher;
