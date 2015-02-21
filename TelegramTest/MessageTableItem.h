@@ -14,7 +14,7 @@
 
 @interface MessageTableItem : NSObject<SelectTextDelegate>
 
-@property (nonatomic,strong) TMTableView *table;
+@property (nonatomic,weak) TMTableView *table;
 
 @property (nonatomic, strong) TL_localMessage *message;
 @property (nonatomic, strong) SenderItem *messageSender;
@@ -63,4 +63,9 @@
 - (void)checkStartDownload:(SettingsMask)setting size:(int)size;
 
 + (NSDateFormatter *)dateFormatter;
+
+-(BOOL)canShare;
+
+-(NSURL *)shareObject;
+
 @end

@@ -53,7 +53,6 @@
     [SharedManager proccessGlobalResponse:response];
     
     
-    
     [MessagesManager addAndUpdateMessage:[response message]];
 }
 
@@ -189,6 +188,8 @@
             [notification setUserInfo:@{@"peer_id":[NSNumber numberWithInt:[message peer_id]]}];
             [[NSUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification];
             
+            message.userNotification = notification;
+            
             //[NSApp requestUserAttention:NSInformationalRequest];
         }
         
@@ -316,10 +317,12 @@
                 [marked addObject:@([msg n_id])];
             msg.flags&=~TGUNREADMESSAGE;
         }
-        [[Storage manager] markAllInDialog:dialog];
+        
     } synchronous:YES];
     
    
+    [[Storage manager] markAllInDialog:dialog];
+    
     return marked;
 }
 

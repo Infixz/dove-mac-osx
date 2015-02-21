@@ -11,7 +11,7 @@
 #import "UploadOperation.h"
 #import "TMElements.h"
 #import "MessagesDelegate.h"
-#import "MesssageInputGrowingTextView.h"
+#import "MessageInputGrowingTextView.h"
 #import "ConnectionStatusViewControllerView.h"
 #import <CoreLocation/CoreLocation.h>
 #import "TGCTextMark.h"
@@ -67,6 +67,7 @@ typedef enum {
 - (MessageTableItem *)itemOfMsgId:(int)msg_id;
 
 +(NSMenu *)destructMenu:(dispatch_block_t)ttlCallback click:(dispatch_block_t)click;
++(NSMenu *)notifications:(dispatch_block_t)callback conversation:(TL_conversation *)conversation click:(dispatch_block_t)click;
 
 - (NSUInteger)messagesCount;
 

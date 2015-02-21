@@ -174,6 +174,19 @@
 
 - (void)notificationChangeMessage:(NSNotification *)notify {
     
+    
+        
+    [self updateLastMessage];
+    
+    //Date
+    [self generateDate];
+    [self notificationChangeUnreadCount:nil];
+    
+    if(notify)
+        [self redrawRow];
+}
+
+-(void)updateLastMessage {
     self.lastMessage = [[MessagesManager sharedManager] find:self.conversation.top_message];
     
     
@@ -185,16 +198,9 @@
     self.isNotRead = self.lastMessage.unread && !self.isOut;
     
     self.messageText = [MessagesUtils conversationLastText:self.lastMessage conversation:self.conversation];
-        
-    
-    
-    //Date
-    [self generateDate];
-    [self notificationChangeUnreadCount:nil];
-    
-    if(notify)
-        [self redrawRow];
 }
+
+
 
 - (void)generateDate {
     
@@ -221,6 +227,8 @@
         [self redrawRow];
         return;
     }
+    
+    [self updateLastMessage];
     
     if(self.conversation.unread_count) {
         NSString *unreadTextCount;

@@ -31,7 +31,8 @@
 
 @interface TGDocumentsMediaTableView ()
 @property (nonatomic,strong) TGDocumentsController *controller;
-@property (nonatomic,strong) TGSharedMediaCap *cap;
+@property (nonatomic,assign,getter=isEditable) BOOL editable;
+@property (nonatomic,strong) NSMutableArray *selectedItems;
 -(void)checkCap;
 @end
 
@@ -122,17 +123,18 @@
 
 -(void)deleteMessages:(NSArray *)ids {
     
-    NSArray *items = [self.items filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id IN %@",ids]];
-    
-    [items enumerateObjectsUsingBlock:^(MessageTableItemDocument *obj, NSUInteger idx, BOOL *stop) {
+    if(self.items.count > 1) {
+        NSArray *items = [[self.items subarrayWithRange:NSMakeRange(1, self.items.count - 1)] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"self.message.n_id IN %@",ids]];
         
-        [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:[self.items indexOfObject:obj]] withAnimation:NSTableViewAnimationEffectFade];
+        [items enumerateObjectsUsingBlock:^(MessageTableItemDocument *obj, NSUInteger idx, BOOL *stop) {
+            
+            [self.tableView removeRowsAtIndexes:[NSIndexSet indexSetWithIndex:[self.items indexOfObject:obj]] withAnimation:NSTableViewAnimationEffectFade];
+            
+        }];
         
-    }];
-    
-    [self.items removeObjectsInArray:items];
-    [self.tableView checkCap];
-    
+        [self.items removeObjectsInArray:items];
+        [self.tableView checkCap];
+    }
     
 }
 
@@ -243,6 +245,29 @@
     
 }
 
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated {
+    _editable = editable;
+    
+    
+    self.selectedItems = [[NSMutableArray alloc] init];
+    
+    [self.controller.items enumerateObjectsUsingBlock:^(MessageTableItemDocument *obj, NSUInteger idx, BOOL *stop) {
+        
+        if(idx > 0) {
+            TGDocumentMediaRowView *row = [self viewAtColumn:0 row:idx makeIfNecessary:NO];
+            
+            [row setEditable:editable animated:animated];
+        }
+        
+        
+    }];
+    
+}
+
+-(BOOL)isEditable {
+    return [[Telegram rightViewController].collectionViewController isEditable];
+}
+
 -(BOOL)isNeedCap {
     return self.controller.defaultItems.count == 0;
 }
@@ -252,6 +277,8 @@
     self.isProgress = YES;
     
     self.controller.conversation = conversation;
+    
+    self.selectedItems = [[NSMutableArray alloc] init];
     
     [self.controller.searchView.searchField setStringValue:@""];
     
@@ -296,12 +323,33 @@
         cell.identifier = kRowIdentifier;
     }
     
+    item.table = self;
+    
     [cell setItem:item];
     
     
     return cell;
 }
 
+-(void)setSelected:(BOOL)selected forItem:(MessageTableItem *)item {
+    
+    
+    if(selected) {
+        [_selectedItems addObject:item];
+    } else {
+        [_selectedItems removeObject:item];
+    }
+    
+    [[Telegram rightViewController].collectionViewController setSectedMessagesCount:self.selectedItems.count];
+}
+
+-(BOOL)isSelectedItem:(MessageTableItem *)item {
+    return [self.selectedItems indexOfObject:item] != NSNotFound;
+}
+
+-(NSArray *)selectedItems {
+    return _selectedItems;
+}
 
 - (void)scrollViewDocumentOffsetChangingNotificationHandler:(NSNotification *)aNotification {
     

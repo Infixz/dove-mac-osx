@@ -557,6 +557,32 @@ static BOOL dragAction = NO;
     
     NSMutableArray *items = [[NSMutableArray alloc] init];
     
+    
+    if([self.item canShare]) {
+        
+        NSArray *shareServiceItems = [NSSharingService sharingServicesForItems:@[self.item.shareObject]];
+        
+        NSMenu *shareMenu = [[NSMenu alloc] initWithTitle:@"Share"];
+        
+        
+        for (NSSharingService *currentService in shareServiceItems) {
+            NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:currentService.title action:@selector(selectedSharingServiceFromMenuItem:) keyEquivalent:@""];
+            item.image = currentService.image;
+            item.representedObject = currentService;
+            [shareMenu addItem:item];
+        }
+        
+        NSMenuItem *shareSubItem = [NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Share",nil) withBlock:nil];
+        
+        [shareSubItem setSubmenu:shareMenu];
+        
+        [items addObject:shareSubItem];
+        
+        [items addObject:[NSMenuItem separatorItem]];
+        
+    }
+    
+    
     if(self.item.message.conversation.type != DialogTypeSecretChat) {
         [items addObject:[NSMenuItem menuItemWithTitle:NSLocalizedString(@"Context.Forward", nil) withBlock:^(id sender) {
             
@@ -587,9 +613,23 @@ static BOOL dragAction = NO;
         
     }]];
     
+    
+    
     return items;
     
 }
+
+- (void)selectedSharingServiceFromMenuItem:(NSMenuItem *)menuItem
+{
+    NSURL *fileURL = self.item.shareObject;
+    if (!fileURL) return;
+    
+    NSSharingService *service = menuItem.representedObject;
+    if (![service isKindOfClass:[NSSharingService class]]) return; // just to make sure…
+    
+    [service performWithItems:@[fileURL]];
+}
+
 
 
 - (void)copy:(id)sender {
@@ -610,7 +650,7 @@ static BOOL dragAction = NO;
         
         NSString *path = mediaFilePath(self.item.message.media);
         
-        NSString *fileName = [path lastPathComponent];
+        NSString *fileName = [self.item.message.media isKindOfClass:[TL_messageMediaDocument class]] ? [self.item.message.media.document file_name] : [path lastPathComponent];
         
         [panel setNameFieldStringValue:fileName];
         

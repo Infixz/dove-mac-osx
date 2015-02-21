@@ -37,7 +37,7 @@ typedef enum {
 
 - (BOOL)isMute;
 - (int)stickTopOrder;
-- (void)muteOrUnmute:(dispatch_block_t)completeHandler;
+- (void)muteOrUnmute:(dispatch_block_t)completeHandler until:(int)until;
 - (void)unmute:(dispatch_block_t)completeHandler;
 - (void)mute:(dispatch_block_t)completeHandler;
 

@@ -108,10 +108,19 @@
         self.conversation = dialog;
         
         
+        if(self.conversation.type == DialogTypeChat) {
+            self.chat = self.conversation.chat;
+        } else if(self.conversation.type == DialogTypeSecretChat) {
+            self.user = self.conversation.encryptedChat.peerUser;
+        } else {
+            self.user = self.conversation.user;
+        }
         
-        self.user = self.conversation.user;
         
-        [self.title appendString:dialog.user.fullName withColor:DARK_BLACK];
+        
+        
+        
+        [self.title appendString:self.conversation.type == DialogTypeChat ? dialog.chat.title : dialog.user.fullName withColor:DARK_BLACK];
         
         [NSMutableAttributedString selectText:searchString fromAttributedString:(NSMutableAttributedString*)self.title selectionColor:BLUE_UI_COLOR];
         

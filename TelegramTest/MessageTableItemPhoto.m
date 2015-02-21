@@ -50,7 +50,7 @@
                 
             }
             
-            cachePhoto = renderedImage(cachePhoto, cachePhoto.size);
+            cachePhoto = [ImageUtils blurImage:renderedImage(cachePhoto, cachePhoto.size) blurRadius:80 frameSize:cachePhoto.size] ;
             
             
             self.imageObject = [[TGImageObject alloc] initWithLocation:self.photoLocation placeHolder:cachePhoto sourceId:self.message.n_id size:self.photoSize];
@@ -60,7 +60,7 @@
             self.imageObject.realSize = NSMakeSize(photoSize.w, photoSize.h);
             
         }
-        
+                
        
         self.imageObject.imageSize = imageSize;
         self.blockSize = NSMakeSize(imageSize.width, MAX(imageSize.height, 60));
@@ -73,6 +73,14 @@
     [super setMessageSender:messageSender];
 }
 
+-(BOOL)canShare {
+    return [TGCache cachedImage:self.imageObject.cacheKey] != nil;
+}
+
+
+-(BOOL)isset {
+    return isPathExists(((TLPhotoSize *)[self.message.media.photo.sizes lastObject]).location.path) && self.downloadItem == nil && self.messageSender == nil;
+}
 
 -(void)doAfterDownload {
     

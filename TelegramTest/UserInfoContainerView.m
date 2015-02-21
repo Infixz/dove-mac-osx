@@ -23,6 +23,7 @@
 #import "MessagesUtils.h"
 #import "TMMediaController.h"
 #import "TMSharedMediaButton.h"
+#import "TMMenuPopover.h"
 @interface UserInfoContainerView()
 @property (nonatomic, strong) TMAvatarImageView *avatarImageView;
 @property (nonatomic, strong) NSTextView *nameTextView;
@@ -60,6 +61,8 @@
 @property (nonatomic,strong) TMTextField *ttlTitle;
 @property (nonatomic,strong) TMTextField *sharedTitle;
 
+@property (nonatomic,strong) TMTextField *muteUntilTitle;
+
 @property (nonatomic,strong) ITSwitch *notificationsSwitcher;
 
 @property (nonatomic, strong) NSProgressIndicator *profileProgressIndicator;
@@ -96,6 +99,7 @@
         
         self.ttlTitle = [TMTextField defaultTextField];
         self.sharedTitle = [TMTextField defaultTextField];
+        self.muteUntilTitle = [TMTextField defaultTextField];
       
         float offsetRight = self.bounds.size.width - 200;
         
@@ -144,6 +148,9 @@
             [[Telegram rightViewController] showCollectionPage:weakSelf.controller.conversation];
             [[Telegram rightViewController].collectionViewController showFiles];
         }];
+        
+        
+        self.filesMediaButton.isFiles = YES;
         
 //        self.importContacts = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Account.ImportContacts", nil) tapBlock:^{
 //           
@@ -222,7 +229,10 @@
               //  [self.setTTLButton setLocked:YES];
             }];
             
-            [menu popUpForView:weakSelf.setTTLButton withType:PopUpAlignTypeRight];
+            TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:menu];
+            
+            [menuPopover showRelativeToRect:weakSelf.setTTLButton.bounds ofView:weakSelf.setTTLButton preferredEdge:CGRectMinYEdge];
+            
         }];
         
         [self.setTTLButton setFrameSize:NSMakeSize(offsetRight, 42)];
@@ -252,27 +262,57 @@
         
         [self addSubview:self.userNameView];
         
+         weakify();
+        
         
         self.notificationView = [UserInfoShortButtonView buttonWithText:NSLocalizedString(@"Notifications", nil) tapBlock:^{
             
+            
+            NSMenu *menu = [MessagesViewController notifications:^{
+                
+                [self buildNotificationsTitle];
+                
+            } conversation:self.controller.conversation click:^{
+                
+                
+            }];;
+            
+            
+            TMMenuPopover *menuPopover = [[TMMenuPopover alloc] initWithMenu:menu];
+
+            [menuPopover showRelativeToRect:weakSelf.muteUntilTitle.bounds ofView:weakSelf.muteUntilTitle preferredEdge:CGRectMinYEdge];
+            
+
         }];
         
         
         
         self.notificationsSwitcher = [[ITSwitch alloc] initWithFrame:NSMakeRect(0, 0, 36, 21)];
         
-        weakify();
+       
         
         [self.notificationsSwitcher setDidChangeHandler:^(BOOL isOn) {
+            
+            
             TL_conversation *dialog = [[DialogsManager sharedManager] findByUserId:strongSelf.user.n_id];
             
             BOOL isMute = dialog.isMute;
             if(isMute == isOn) {
-                [dialog muteOrUnmute:nil];
+                
+                [strongSelf.notificationView setLocked:YES];
+                
+//                [dialog muteOrUnmute:^{
+//                    
+//                    [strongSelf.notificationView setLocked:NO];
+//                    
+//                    [strongSelf buildNotificationsTitle];
+//                    
+//                }];
             }
+        
         }];
         
-        [self.notificationView setRightContainer:self.notificationsSwitcher];
+       // [self.notificationView setRightContainer:self.notificationsSwitcher];
         
         [self.encryptedKeyButton setRightContainerOffset:NSMakePoint(-8, 3)];
         [self.setTTLButton setRightContainerOffset:NSMakePoint(0, 2)];
@@ -339,6 +379,32 @@
     [self.ttlTitle sizeToFit];
     
     self.setTTLButton.rightContainer = self.ttlTitle;
+    
+}
+
+
+-(void)buildNotificationsTitle  {
+    
+    static NSTextAttachment *attach;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        attach = [NSMutableAttributedString textAttachmentByImage:[image_selectPopup() imageWithInsets:NSEdgeInsetsMake(0, 10, 0, 0)]];
+    });
+    
+    
+    NSMutableAttributedString *string = [[NSMutableAttributedString alloc] init];
+    NSString *str = [MessagesUtils muteUntil:self.controller.conversation.notify_settings.mute_until];
+    
+    [string appendString:str withColor:NSColorFromRGB(0xa1a1a1)];
+    
+    [string setFont:[NSFont fontWithName:@"HelveticaNeue-Light" size:15] forRange:NSMakeRange(0, string.length)];
+    
+    [string appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
+    [self.muteUntilTitle setAttributedStringValue:string];
+    
+    [self.muteUntilTitle sizeToFit];
+    
+    self.notificationView.rightContainer = self.muteUntilTitle;
     
 }
 
@@ -511,6 +577,8 @@
     
     [self.sharedMediaButton setConversation:self.controller.conversation];
     
+    [self.filesMediaButton setConversation:self.controller.conversation];
+    
     
     NSSize size;
     
@@ -536,8 +604,9 @@
         
         BOOL isMute =  dialog.isMute;
         
+        [self buildNotificationsTitle];
         
-        [self.notificationsSwitcher setOn:!isMute animated:YES];
+      //  [self.notificationsSwitcher setOn:!isMute animated:YES];
         
     } else {
         [self.notificationView setHidden:YES];

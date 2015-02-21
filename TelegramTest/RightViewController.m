@@ -73,6 +73,8 @@
 @property (nonatomic, strong) TMViewController *noDialogsSelectedViewController;
 @property (nonatomic, strong) TMView *modalView;
 @property (nonatomic, strong) id modalObject;
+ 
+
 
 @end
 
@@ -117,6 +119,8 @@
     self.collectionViewController = [[TMCollectionPageController alloc] initWithFrame:self.view.bounds];
     self.noDialogsSelectedViewController = [[NotSelectedDialogsViewController alloc] initWithFrame:self.view.bounds];
     self.broadcastInfoViewController = [[BroadcastInfoViewController alloc] initWithFrame:self.view.bounds];
+    
+    self.
     
     self.composePickerViewController = [[ComposePickerViewController alloc] initWithFrame:self.view.bounds];
     self.composeChatCreateViewController = [[ComposeChatCreateViewController alloc] initWithFrame:self.view.bounds];
@@ -330,6 +334,13 @@
             [self hideModalView:YES animation:YES];
             
             [[Telegram sharedInstance] showMessagesFromDialog:dialog sender:self];
+            
+            
+            TMViewController *controller = [[Telegram leftViewController] currentTabController];
+            
+            if([controller isKindOfClass:[StandartViewController class]]) {
+                [(StandartViewController *)controller searchByString:@""];
+            }
             
             
         },nil);

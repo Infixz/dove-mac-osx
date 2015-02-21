@@ -17,4 +17,5 @@
 - (NSArray *)getEmojiFromString;
 -(NSString *)replaceSmilesToEmoji;
 - (BOOL)containsCJKCharacters;
+-(NSString *)fixEmoji;
 @end

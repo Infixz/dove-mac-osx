@@ -13,7 +13,7 @@
 #import "ImageUtils.h"
 #import "SelfDestructionController.h"
 #import "TGPhotoViewer.h"
-@interface MessageTableCellPhotoView()
+@interface MessageTableCellPhotoView()<TGImageObjectDelegate>
 @property (nonatomic,strong) NSImageView *fireImageView;
 @end
 
@@ -49,7 +49,7 @@ NSImage *fireImage() {
     if (self) {
         weak();
         
-     
+        
         self.imageView = [[BluredPhotoImageView alloc] initWithFrame:NSMakeRect(0, 0, 20, 20)];
         [self.imageView setWantsLayer:YES];
         self.imageView.cornerRadius = 4;
@@ -61,6 +61,9 @@ NSImage *fireImage() {
         [self.imageView setTapBlock:^{
             PreviewObject *object = [[PreviewObject alloc] initWithMsdId:weakSelf.item.message.n_id media:weakSelf.item.message peer_id:weakSelf.item.message.peer_id];
             
+            
+            if(!weakSelf.item.isset)
+                return;
             
             object.reservedObject = weakSelf.imageView.image;
             
@@ -78,8 +81,7 @@ NSImage *fireImage() {
             
         }];
         
-        
-        
+
         
         [self setProgressToView:self.imageView];
 
@@ -90,10 +92,6 @@ NSImage *fireImage() {
         
         [self.imageView setContentMode:BTRViewContentModeCenter];
         
-        
-        [self.progressView setImage:image_DownloadIconWhite() forState:TMLoaderViewStateNeedDownload];
-        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateDownloading];
-        [self.progressView setImage:image_LoadCancelWhiteIcon() forState:TMLoaderViewStateUploading];
         
         
     }
@@ -143,8 +141,16 @@ NSImage *fireImage() {
 -(void)setCellState:(CellState)cellState {
     [super setCellState:cellState];
     
-    BOOL isNeedSecretBlur = [self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60 && ((TL_destructMessage *)self.item.message).ttl_seconds > 0;
+    [self.progressView setImage:cellState == CellStateSending ? image_DownloadIconWhite() : nil forState:TMLoaderViewStateNeedDownload];
+    [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateDownloading];
+    [self.progressView setImage:cellState == CellStateSending ? image_LoadCancelWhiteIcon() : nil forState:TMLoaderViewStateUploading];
 
+    
+    
+    BOOL isNeedSecretBlur = ([self.item.message isKindOfClass:[TL_destructMessage class]] && ((TL_destructMessage *)self.item.message).ttl_seconds < 60*60 && ((TL_destructMessage *)self.item.message).ttl_seconds > 0);
+
+    
+    
     
     
     [self deallocFireImage];
@@ -158,6 +164,9 @@ NSImage *fireImage() {
         [self.fireImageView setHidden:!isNeedSecretBlur];
         [self.fireImageView setCenterByView:self.imageView];
     }
+        
+    
+    [self.progressView setHidden:self.item.isset];
     
     [self.progressView setState:cellState];
     
@@ -166,10 +175,7 @@ NSImage *fireImage() {
 
 - (void) setItem:(MessageTableItemPhoto *)item {
     
-
-    
     [super setItem:item];
-    
     
     [self.imageView setFrameSize:item.blockSize];
     
@@ -177,8 +183,29 @@ NSImage *fireImage() {
     
     self.imageView.object = item.imageObject;
 
+
+    [item.imageObject.supportDownloadListener setProgressHandler:^(DownloadItem *item) {
+       
+        [ASQueue dispatchOnMainQueue:^{
+            
+            [self.progressView setProgress:item.progress animated:YES];
+            
+        }];
+        
+    }];
     
+    [item.imageObject.supportDownloadListener setCompleteHandler:^(DownloadItem *item) {
+        
+        [ASQueue dispatchOnMainQueue:^{
+            
+            [self updateCellState];
+            
+        }];
+        
+    }];
+        
 }
+
 
 
 -(void)setEditable:(BOOL)editable animation:(BOOL)animation

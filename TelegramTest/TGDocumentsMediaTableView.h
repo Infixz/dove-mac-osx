@@ -14,4 +14,12 @@
 -(void)setConversation:(TL_conversation *)conversation;
 
 -(BOOL)isNeedCap;
+-(void)setEditable:(BOOL)editable animated:(BOOL)animated;
+-(BOOL)isEditable;
+
+-(BOOL)isSelectedItem:(MessageTableItem *)item;
+-(void)setSelected:(BOOL)selected forItem:(MessageTableItem *)item;
+
+-(NSArray *)selectedItems;
+
 @end
