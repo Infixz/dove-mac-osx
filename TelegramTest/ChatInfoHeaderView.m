@@ -358,7 +358,6 @@
     
     BOOL isMute = chat.dialog.isMute;
     
-<<<<<<< HEAD
     [self.notificationSwitcher setOn:!isMute animated:NO];
     
     
@@ -376,10 +375,8 @@
     
     [self.stickToTopSwitcher setOn:isStickTop animated:NO];
     
-=======
+
     [self buildNotificationsTitle];
->>>>>>> master
-    
     [self TMNameTextFieldDidChanged:self.nameTextField];
 }
 
