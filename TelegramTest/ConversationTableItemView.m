@@ -412,10 +412,6 @@ static int unreadOffsetRight = 13;
     [self.titleTextField setSelectText:item.selectString];
     
 
-    [[NSColor redColor] set];
-    NSRectFill(NSMakeRect(0, 0, self.bounds.size.width - DIALOG_BORDER_WIDTH, self.bounds.size.height));
-
-    
     [self setNeedsDisplay:YES];
     
 }
